@@ -1,0 +1,99 @@
+load STM32F411CEUx
+set pin "PC13-ANTI_TAMP" GPIO_Output
+set pin "PC14-OSC32_IN" RCC_OSC32_IN
+lock pin "PC14-OSC32_IN" false
+set pin "PC15-OSC32_OUT" RCC_OSC32_OUT
+lock pin "PC15-OSC32_OUT" false
+set pin "PH0 - OSC_IN" RCC_OSC_IN
+lock pin "PH0 - OSC_IN" false
+set pin "PH1 - OSC_OUT" RCC_OSC_OUT
+lock pin "PH1 - OSC_OUT" false
+set pin "PA0-WKUP" GPIO_EXTI0
+set pin "PA1" ADC1_IN1
+lock pin "PA1" false
+set pin "PA2" ADC1_IN2
+lock pin "PA2" false
+set pin "PA5" TIM2_CH1
+lock pin "PA5" false
+set pin "PA13" SYS_JTMS-SWDIO
+lock pin "PA13" false
+set pin "PA14" SYS_JTCK-SWCLK
+lock pin "PA14" false
+set mode ADC1 "IN1"
+set mode ADC1 "IN2"
+set mode FREERTOS "CMSIS_V2"
+set mode RCC "HSE-External-Oscillator"
+set mode RCC "LSE-External-Oscillator"
+set mode SYS "Serial_Wire"
+set mode SYS "TIM10"
+set mode TIM2 "Internal"
+set mode TIM2 "PWM Generation1 CH1"
+set ip parameters ADC1 "master" "1"
+set ip parameters ADC1 "DMAContinuousRequests" "ENABLE"
+set ip parameters ADC1 "NbrOfConversionFlag" "1"
+set ip parameters ADC1 "NbrOfConversion" "2"
+set ip parameters ADC1 "NbrOfConversionFlag" "1"
+set ip parameters ADC1 "NbrOfConversion" "2"
+set ip parameters ADC1 "Channel-0#ChannelRegularConversion" "ADC_CHANNEL_1"
+set ip parameters ADC1 "NbrOfConversionFlag" "1"
+set ip parameters ADC1 "NbrOfConversion" "2"
+set ip parameters ADC1 "Rank-1#ChannelRegularConversion" "2"
+set ip parameters ADC1 "Channel-1#ChannelRegularConversion" "ADC_CHANNEL_2"
+set ip parameters FREERTOS "Tasks01" "LEDTask,24,128,StartLEDTask,Default,NULL,Dynamic,NULL,NULL;AN1Task,24,128,StartAN1Task,Default,NULL,Dynamic,NULL,NULL;AN2Task,24,128,StartAN2Task,Default,NULL,Dynamic,NULL,NULL"
+set ip parameters FREERTOS "Queues01" "AN1Queue,16,uint16_t,0,Dynamic,NULL,NULL;AN2Queue,16,uint16_t,0,Dynamic,NULL,NULL"
+set ip parameters FREERTOS "Mutexes01" "pwmMutex,Dynamic,NULL,Available"
+set ip parameters FREERTOS "BinarySemaphores01" "buttonSemaphore,Dynamic,NULL,Available"
+set ip parameters TIM2 "Prescaler" "3"
+set ip parameters TIM2 "Period" "4095"
+set ip parameters TIM2 "AutoReloadPreload" "TIM_AUTORELOAD_PRELOAD_ENABLE"
+dma add "ADC1"
+dma set_param "ADC1" "Instance" "DMA2_Stream0"
+dma set_param "ADC1" "PeriphDataAlignment" "DMA_PDATAALIGN_WORD"
+dma set_param "ADC1" "MemDataAlignment" "DMA_MDATAALIGN_WORD"
+dma set_param "ADC1" "Mode" "DMA_CIRCULAR"
+NVIC set_prioritygroup 4
+NVIC enable "MemoryManagement_IRQn"
+NVIC set_priority "MemoryManagement_IRQn" 0
+NVIC set_subpriority "MemoryManagement_IRQn" 0
+NVIC enable "BusFault_IRQn"
+NVIC set_priority "BusFault_IRQn" 0
+NVIC set_subpriority "BusFault_IRQn" 0
+NVIC enable "UsageFault_IRQn"
+NVIC set_priority "UsageFault_IRQn" 0
+NVIC set_subpriority "UsageFault_IRQn" 0
+NVIC enable "SVCall_IRQn"
+NVIC set_priority "SVCall_IRQn" 0
+NVIC set_subpriority "SVCall_IRQn" 0
+NVIC set_irqhandlergenerated "SVCall_IRQn" false
+NVIC enable "DebugMonitor_IRQn"
+NVIC set_priority "DebugMonitor_IRQn" 0
+NVIC set_subpriority "DebugMonitor_IRQn" 0
+NVIC enable "PendSV_IRQn"
+NVIC set_priority "PendSV_IRQn" 15
+NVIC set_subpriority "PendSV_IRQn" 0
+NVIC set_irqhandlergenerated "PendSV_IRQn" false
+NVIC enable "SysTick_IRQn"
+NVIC set_priority "SysTick_IRQn" 15
+NVIC set_subpriority "SysTick_IRQn" 0
+NVIC set_irqhandlergenerated "SysTick_IRQn" false
+NVIC enable "EXTI0_IRQn"
+NVIC set_priority "EXTI0_IRQn" 5
+NVIC set_subpriority "EXTI0_IRQn" 0
+NVIC enable "ADC_IRQn"
+NVIC set_priority "ADC_IRQn" 5
+NVIC set_subpriority "ADC_IRQn" 0
+NVIC enable "TIM1_UP_TIM10_IRQn"
+NVIC set_priority "TIM1_UP_TIM10_IRQn" 15
+NVIC set_subpriority "TIM1_UP_TIM10_IRQn" 0
+NVIC enable "TIM2_IRQn"
+NVIC set_priority "TIM2_IRQn" 5
+NVIC set_subpriority "TIM2_IRQn" 0
+NVIC enable "DMA2_Stream0_IRQn"
+NVIC set_priority "DMA2_Stream0_IRQn" 5
+NVIC set_subpriority "DMA2_Stream0_IRQn" 0
+set gpio parameters "PC13-ANTI_TAMP" "PinState" "GPIO_PIN_SET"
+set gpio parameters "PC13-ANTI_TAMP" "GPIO_PuPd" "GPIO_NOPULL"
+set gpio parameters "PC13-ANTI_TAMP" "GPIO_Label" "Blue LED"
+set gpio parameters "PC13-ANTI_TAMP" "GPIO_ModeDefaultOutputPP" "GPIO_MODE_OUTPUT_OD"
+set gpio parameters "PA0-WKUP" "GPIO_PuPd" "GPIO_PULLUP"
+set gpio parameters "PA0-WKUP" "GPIO_Label" "User KEY EXTI0"

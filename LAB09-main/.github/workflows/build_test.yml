@@ -1,0 +1,55 @@
+# This workflow automates CMake build testing for all folders with CMakeLists.txt
+name: CMake Build Test in All Folders
+
+on:
+  # Triggers the workflow on manual dispatch
+  workflow_dispatch:
+
+env:
+  BUILD_TYPE: Debug  # Customize the CMake build type (Release, Debug, etc.)
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify Folders with CMakeLists.txt
+        run: |
+          FOLDERS=$(find . -type f -name "CMakeLists.txt" | xargs -n1 dirname)
+          if [[ -z "$FOLDERS" ]]; then
+            echo "Error: No project folders with CMakeLists.txt found!"
+            exit 1
+          fi
+          echo "Valid project folders found:"
+          echo "$FOLDERS"
+        shell: bash
+              
+      - name: Install arm-none-eabi-gcc GNU Arm Embedded Toolchain
+        uses: carlosperate/arm-none-eabi-gcc-action@main
+        
+      - name: Install Ninja
+        uses: seanmiddleditch/gha-setup-ninja@master
+
+      - name: Check Tool Versions
+        run: |
+          echo "::group::Checking tool versions"
+          arm-none-eabi-gcc --version
+          ninja --version
+          echo "::endgroup::"
+
+      - name: Find All Folders and Configure CMake Build ${{env.BUILD_TYPE}}
+        run: |
+          for dir in */ ; do
+            dir=${dir%/}  # Remove trailing slash
+            echo "::group::Processing folder: $dir"
+            if [ -f "$GITHUB_WORKSPACE/$dir/CMakeLists.txt" ]; then              
+              cmake -B "$GITHUB_WORKSPACE/$dir/build" -S "$GITHUB_WORKSPACE/$dir" -DCMAKE_BUILD_TYPE="${{ env.BUILD_TYPE }}"
+              cmake --build "$GITHUB_WORKSPACE/$dir/build" --config "${{ env.BUILD_TYPE }}"			        
+            else
+              echo "Skipping $dir (No CMakeLists.txt)"
+            fi
+            echo "::endgroup::"
+          done
+        shell: bash

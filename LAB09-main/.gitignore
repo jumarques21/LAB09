@@ -1,0 +1,50 @@
+# Ignore STM32CubeMX-generated files
+#*.ioc
+*.bak
+MX/
+
+# Ignore build directories
+build/
+out/
+Debug/
+Release/
+
+# Ignore object files and compiled binaries
+*.o
+*.a
+*.so
+*.exe
+#*.elf
+*.bin
+*.hex
+*.map
+*.lst
+
+# Ignore CMake cache and generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+compile_commands.json
+
+# Ignore Ninja build artifacts
+build/
+*.ninja
+.ninja_deps
+.ninja_log
+rules.ninja
+
+# Ignore VS Code settings and workspace files
+.vscode/
+*.code-workspace
+
+# Ignore logs and temporary files
+*.log
+*.tmp
+
+# Ignore user-specific configuration files
+*.user
+*.swp
+*.swo
+Thumbs.db
+Desktop.ini
